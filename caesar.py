@@ -43,6 +43,6 @@ if __name__ == '__main__':
     for line in sys.stdin:
         text += line
     if text:
-        shift = analysis(text)
-        print(['Left','Right'][shift>13]+' shift of '+str(shift if shift<13 else (26-shift)))
-        print(shift(text,shift))
+        s = analysis(text)
+        print(['Left','Right'][s>13]+' shift of '+str(s if s<13 else (26-s)))
+        print(shift(text,s))
