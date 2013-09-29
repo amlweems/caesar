@@ -14,12 +14,15 @@ with open(PATH_TO_FREQ) as f:
         ngrams+=int(freq)
 
 def shift(plaintext, s):
+    """Returns plaintext with all alpha characters shifted to the right by s"""
     return ''.join([chr(((ord(j)&0x9F)+s-1)%26+1+0x40+(0x20 if ord(j)&0x20 else 0)) if j.isalpha() else j for j in plaintext])
 
 def bruteforce(plaintext):
+    """Returns an array of plaintext shifted by each possible shift"""
     return [shift(plaintext,i) for i in range(26)]
 
 def analysis(plaintext):
+    """Performs frequency analysis on plaintext to determine the best shift"""
     freq = [0]*26
     plaintext = re.sub('\W','',plaintext)
     length = float(len(plaintext))
@@ -35,6 +38,7 @@ def analysis(plaintext):
     return 26-g.index(min(g))
 
 if __name__ == '__main__':
+    """Enter your text followed by ^D to perform frequency analysis"""
     text = ""
     for line in sys.stdin:
         text += line
