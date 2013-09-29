@@ -3,9 +3,6 @@ import sys, re, os
 
 PATH_OF_SCRIPT=os.path.dirname(os.path.realpath(__file__))
 
-PATH_TO_DICT=os.path.join(PATH_OF_SCRIPT, 'words.txt')
-dictionary = set(open(PATH_TO_DICT).read().split('\n'))
-
 PATH_TO_FREQ=os.path.join(PATH_OF_SCRIPT, 'frequency.tsv')
 frequency = [0]*26
 ngrams = 0.0
@@ -22,36 +19,26 @@ def shift(plaintext, s):
 def bruteforce(plaintext):
     return [shift(plaintext,i) for i in range(26)]
 
-def guess(plaintext):
-    return max(bruteforce(plaintext), key=lambda x: analyse(x))
-
-def analyse(text):
-    words = set([i.lower() for i in re.split('\W',text) if i])
-    return len(dictionary.intersection(words))
-
 def analysis(plaintext):
-    f = [0]*26
+    freq = [0]*26
     plaintext = re.sub('\W','',plaintext)
-    length = len(plaintext)+0.0
-    for l in plaintext:
-        f[(ord(l)&0x9F)-1]+=1
+    length = float(len(plaintext))
+    for letter in plaintext:
+        freq[ord(letter.lower()) - ord('a')]+=1
     g = [0]*26
-    for s in range(26):
+    for shift in range(26):
         summation = 0
-        tmp = f[s:]+f[:s]
+        shifted_freq = freq[shift:]+freq[:shift]
         for i in range(26):
-            summation += ((tmp[i]/length) / (frequency[i]/ngrams)) ** 2
-        g[s] = summation
+            summation += ((shifted_freq[i]/length) / (frequency[i]/ngrams)) ** 2
+        g[shift] = summation
     return 26-g.index(min(g))
 
 if __name__ == '__main__':
-    if len(sys.argv) > 1:
-        inp = sys.argv[1]
-    else:
-        inp = sys.stdin.readline()
-    if len(sys.argv) > 2 and sys.argv[2].isdigit():
-        print shift(inp,int(sys.argv[2]))
-    else:
-        s = analysis(inp)
-        print ['Left','Right'][s>13]+' shift of '+str(s if s<13 else (26-s))
-        print shift(inp,s)
+    text = ""
+    for line in sys.stdin:
+        text += line
+    if text:
+        shift = analysis(text)
+        print(['Left','Right'][shift>13]+' shift of '+str(shift if shift<13 else (26-shift)))
+        print(shift(text,shift))
