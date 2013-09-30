@@ -1,17 +1,8 @@
 #!/usr/bin/env python
 import sys, re, os
 
-PATH_OF_SCRIPT=os.path.dirname(os.path.realpath(__file__))
-
-PATH_TO_FREQ=os.path.join(PATH_OF_SCRIPT, 'frequency.tsv')
-frequency = [0]*26
-ngrams = 0.0
-
-with open(PATH_TO_FREQ) as f:
-    for line in f.read().split('\n'):
-        letter, freq = line.split('\t')
-        frequency[ord(letter.lower()) - ord('a')]=int(freq)
-        ngrams+=int(freq)
+frequency = [286527429118,52905544693,119155568598,136017528785,445155370175,85635440629,66615316232,180074687596,269731642485,5657910830,19261229433,144998552911,89506734085,257770795264,272276534337,76112599849,4292916949,223767519675,232082812755,330535289102,97273082907,37532682260,59712390260,8369138754,59331661972,3205398166]
+ngrams = 3563505777820.0
 
 def shift(plaintext, s):
     """Returns plaintext with all alpha characters shifted to the right by s"""
